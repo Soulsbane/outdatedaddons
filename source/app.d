@@ -53,7 +53,23 @@ void scanAddonDir()
 
 			if(parser.as!uint("Interface") != CURRENT_INTERFACE_VERSION)
 			{
-				writeln(name, " => ", parser.getValue("Interface"));
+				immutable string title = parser.getValue("Title");
+
+				if(title.length)
+				{
+					if(title.canFind("|"))
+					{
+						writeln(name.baseName, " => ", parser.getValue("Interface"));
+					}
+					else
+					{
+						writeln(parser.getValue("Title"), " => ", parser.getValue("Interface"));
+					}
+				}
+				else
+				{
+					writeln(name.baseName, " => ", parser.getValue("Interface"));
+				}
 				++numberOfOutdated;
 			}
 		}
