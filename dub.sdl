@@ -1,0 +1,6 @@
+name "outdatedaddons"
+description "Scans WoW&#39;s Addons directory for outdated addons. And generates a list.."
+copyright "Copyright © 2017"
+authors "Paul Crane"
+dependency "luaaddon" version="*"
+dependency "luad" version="~master"
