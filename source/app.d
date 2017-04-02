@@ -1,6 +1,5 @@
 import std.stdio;
 import std.algorithm;
-import std.range;
 import std.file;
 import std.array;
 import std.path;
@@ -30,13 +29,11 @@ void scanAddonDir()
 {
 
 	auto dirs = getcwd.dirEntries(SpanMode.shallow)
-		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir));
-
-	auto numberOfAddons = getcwd.dirEntries(SpanMode.shallow)
 		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
-		.walkLength;
+		.array;
 
-	uint numberOfOutdated;
+	immutable size_t numberOfAddons = dirs.length;
+	size_t numberOfOutdated;
 
 	writeln(numberOfAddons, " addons found. Scanning toc files...");
 
