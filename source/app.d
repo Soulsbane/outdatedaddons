@@ -6,6 +6,7 @@ import std.array;
 import std.path;
 
 import luaaddon.tocparser;
+import ctoptions.structoptions;
 
 enum CURRENT_INTERFACE_VERSION = 70200;
 
@@ -80,5 +81,12 @@ void scanAddonDir()
 
 void main(string[] arguments)
 {
+	struct Options
+	{
+
+	}
+
+	StructOptions!Options options;
+
 	scanAddonDir();
 }
