@@ -7,6 +7,7 @@ import std.path;
 
 import luaaddon.tocparser;
 import ctoptions.structoptions;
+import ctoptions.getoptmixin;
 
 enum CURRENT_INTERFACE_VERSION = 70200;
 
@@ -83,10 +84,12 @@ void main(string[] arguments)
 {
 	struct Options
 	{
-
+		@GetOptOptions("Sets the minimum toc version to scan for.", "tv", "version")
+		size_t tocVersion;
 	}
 
 	StructOptions!Options options;
+	immutable bool success = generateGetOptCode!Options(arguments, options);
 
 	scanAddonDir();
 }
