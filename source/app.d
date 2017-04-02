@@ -59,7 +59,7 @@ void scanAddonDir()
 				{
 					if(title.canFind("|"))
 					{
-						writeln(name.baseName, " => ", parser.getValue("Interface"));
+						writeln(name.baseName.stripExtension, " => ", parser.getValue("Interface"));
 					}
 					else
 					{
@@ -68,7 +68,7 @@ void scanAddonDir()
 				}
 				else
 				{
-					writeln(name.baseName, " => ", parser.getValue("Interface"));
+					writeln(name.baseName.stripExtension, " => ", parser.getValue("Interface"));
 				}
 				++numberOfOutdated;
 			}
