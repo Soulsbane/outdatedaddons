@@ -16,9 +16,21 @@ bool isHiddenFileOrDir(DirEntry entry)
 
 	foreach(dirPart; dirParts)
 	{
-		if(dirPart.startsWith("."))
+		version(linux)
 		{
-			return true;
+			if(dirPart.startsWith("."))
+			{
+				return true;
+			}
+		}
+		version (Windows)
+		{
+			import core.sys.windows;
+
+			if(getAttributes(dirPart) & FILE_ATTRIBUTE_HIDDEN)
+			{
+				return true;
+			}
 		}
 	}
 
