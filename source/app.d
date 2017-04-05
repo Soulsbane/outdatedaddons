@@ -98,7 +98,20 @@ void main(string[] arguments)
 	}
 
 	StructOptions!Options options;
-	immutable bool success = generateGetOptCode!Options(arguments, options);
 
-	scanAddonDir();
+	try
+	{
+		if(arguments.length == 1)
+		{
+			scanAddonDir();
+		}
+		else
+		{
+			generateGetOptCode!Options(arguments, options);
+		}
+	}
+	catch(GetOptMixinException ex)
+	{
+		writeln(ex.msg);
+	}
 }
