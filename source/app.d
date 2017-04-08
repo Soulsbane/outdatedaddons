@@ -89,12 +89,19 @@ void scanAddonDir()
 	writeln("Found a total of ", numberOfOutdated, " outdated addons!");
 }
 
+void showVersion()
+{
+	writeln("Version 0.9");
+}
+
 void main(string[] arguments)
 {
 	struct Options
 	{
-		@GetOptOptions("Sets the minimum toc version to scan for.", "tv", "version")
+		@GetOptOptions("Sets the minimum toc version to scan for.", "st", "settoc")
 		size_t tocVersion;
+		@GetOptFunction("version", "showVersion")
+		string appVersion;
 	}
 
 	StructOptions!Options options;
