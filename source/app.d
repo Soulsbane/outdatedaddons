@@ -100,7 +100,7 @@ void main(string[] arguments)
 	{
 		@GetOptOptions("Sets the minimum toc version to scan for.", "st", "settoc")
 		size_t tocVersion;
-		@GetOptFunction("version", "showVersion")
+		@GetOptCallback("version", "showVersion")
 		string appVersion;
 	}
 
