@@ -96,12 +96,11 @@ void showVersion()
 
 void main(string[] arguments)
 {
+	@GetOptCallback("version", "showVersion")
 	struct Options
 	{
 		@GetOptOptions("Sets the minimum toc version to scan for.", "st", "settoc")
 		size_t tocVersion;
-		@GetOptCallback("version", "showVersion")
-		string appVersion;
 	}
 
 	StructOptions!Options options;
