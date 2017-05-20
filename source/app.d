@@ -42,7 +42,8 @@ void scanAddonDir()
 
 	auto dirs = getcwd.dirEntries(SpanMode.shallow)
 		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
-		.array;
+		.array
+		.sort!((a, b) => a.name < b.name);
 
 	immutable size_t numberOfAddons = dirs.length;
 	size_t numberOfOutdated;
