@@ -117,7 +117,7 @@ void main(string[] arguments)
 			generateGetOptCode!Options(arguments, options);
 		}
 	}
-	catch(GetOptMixinException ex)
+	catch(GetOptException ex)
 	{
 		writeln(ex.msg);
 	}
