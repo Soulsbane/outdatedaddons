@@ -8,7 +8,7 @@ import luaaddon.tocparser;
 import ctoptions.structoptions;
 import ctoptions.getoptmixin;
 
-enum CURRENT_INTERFACE_VERSION = 70200;
+enum CURRENT_INTERFACE_VERSION = 70300;
 
 bool isHiddenFileOrDir(DirEntry entry)
 {
