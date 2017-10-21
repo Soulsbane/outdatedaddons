@@ -52,7 +52,6 @@ void scanAddonDir()
 
 	foreach(e; dirs)
 	{
-
 		auto files = e.name.dirEntries(SpanMode.shallow)
 			.filter!(a => (!isHiddenFileOrDir(a) && a.isFile && a.name.endsWith(".toc")));
 
@@ -106,19 +105,12 @@ void main(string[] arguments)
 
 	StructOptions!Options options;
 
-	try
+	if(arguments.length == 1)
 	{
-		if(arguments.length == 1)
-		{
-			scanAddonDir();
-		}
-		else
-		{
-			generateGetOptCode!Options(arguments, options);
-		}
+		scanAddonDir();
 	}
-	catch(GetOptException ex)
+	else
 	{
-		writeln(ex.msg);
+		generateGetOptCode!Options(arguments, options);
 	}
 }
