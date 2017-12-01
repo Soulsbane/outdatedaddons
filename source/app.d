@@ -52,12 +52,10 @@ void scanAddonDir()
 
 	foreach(e; dirs)
 	{
-		auto files = e.name.dirEntries(SpanMode.shallow)
-			.filter!(a => (!isHiddenFileOrDir(a) && a.isFile && a.name.endsWith(".toc")));
+		immutable string name = buildNormalizedPath(e.name, e.name.baseName ~ ".toc");
 
-		foreach(file; files)
+		if(name.exists)
 		{
-			immutable string name = buildNormalizedPath(file.name);
 			TocParser parser;
 
 			parser.loadFile(name);
