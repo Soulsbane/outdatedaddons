@@ -3,6 +3,10 @@ import std.algorithm;
 import std.file;
 import std.array;
 import std.path;
+import std.exception;
+import core.exception : RangeError;
+
+import requests;
 
 import luaaddon.tocparser;
 import ctoptions.structoptions;
@@ -37,7 +41,7 @@ bool isHiddenFileOrDir(DirEntry entry)
 	return false;
 }
 
-void scanAddonDir()
+void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 {
 
 	auto dirs = getcwd.dirEntries(SpanMode.shallow)
@@ -57,10 +61,9 @@ void scanAddonDir()
 		if(name.exists)
 		{
 			TocParser parser;
-
 			parser.loadFile(name);
 
-			if(parser.as!uint("Interface") != CURRENT_INTERFACE_VERSION)
+			if(parser.as!size_t("Interface") != apiVersion)
 			{
 				immutable string title = parser.getValue("Title");
 
@@ -87,6 +90,28 @@ void scanAddonDir()
 	writeln("Found a total of ", numberOfOutdated, " outdated addons!");
 }
 
+size_t getCurrentInterfaceVersion()
+{
+	Buffer!ubyte temp;
+
+	immutable string apiUrl =  "https://raw.githubusercontent.com/tomrus88/BlizzardInterfaceCode/master/Interface/FrameXML/FrameXML.toc";
+	immutable string content = cast(string)getContent(apiUrl)
+		.ifThrown!ConnectError(temp)
+		.ifThrown!TimeoutException(temp)
+		.ifThrown!ErrnoException(temp)
+		.ifThrown!RequestException(temp);
+
+	if(content)
+	{
+		TocParser toc;
+
+		toc.loadString(content);
+		return toc.as!size_t("Interface", CURRENT_INTERFACE_VERSION);
+	}
+
+	return CURRENT_INTERFACE_VERSION;
+}
+
 void showVersion()
 {
 	writeln("Version 0.9");
@@ -99,6 +124,8 @@ void main(string[] arguments)
 	{
 		@GetOptOptions("Sets the minimum toc version to scan for.", "st", "settoc")
 		size_t tocVersion;
+		@GetOptOptions("Attempt to get the latest API version.") @DisableSave
+		bool update;
 	}
 
 	StructOptions!Options options;
@@ -110,5 +137,11 @@ void main(string[] arguments)
 	else
 	{
 		generateGetOptCode!Options(arguments, options);
+
+		if(options.hasUpdate())
+		{
+			immutable size_t apiVersion = getCurrentInterfaceVersion();
+			scanAddonDir(apiVersion);
+		}
 	}
 }
