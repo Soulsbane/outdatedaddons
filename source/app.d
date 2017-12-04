@@ -94,22 +94,17 @@ size_t getCurrentInterfaceVersion()
 {
 	Buffer!ubyte temp;
 
-	immutable string apiUrl =  "https://raw.githubusercontent.com/tomrus88/BlizzardInterfaceCode/master/Interface/FrameXML/FrameXML.toc";
+	immutable string apiUrl = "https://raw.githubusercontent.com/tomrus88/BlizzardInterfaceCode/master/Interface/FrameXML/FrameXML.toc";
 	immutable string content = cast(string)getContent(apiUrl)
 		.ifThrown!ConnectError(temp)
 		.ifThrown!TimeoutException(temp)
 		.ifThrown!ErrnoException(temp)
 		.ifThrown!RequestException(temp);
 
-	if(content)
-	{
-		TocParser toc;
+	TocParser toc;
 
-		toc.loadString(content);
-		return toc.as!size_t("Interface", CURRENT_INTERFACE_VERSION);
-	}
-
-	return CURRENT_INTERFACE_VERSION;
+	toc.loadString(content);
+	return toc.as!size_t("Interface", CURRENT_INTERFACE_VERSION);
 }
 
 void showVersion()
