@@ -14,6 +14,13 @@ import ctoptions.getoptmixin;
 
 enum CURRENT_INTERFACE_VERSION = 70300;
 
+// Used to add additional methods to TocParser.
+struct AdditionalMethods
+{
+	string Title;
+	size_t Interface; // Has to be capitalized since it is a keyword.
+}
+
 bool isHiddenFileOrDir(DirEntry entry)
 {
 	auto dirParts = entry.name.pathSplitter;
@@ -43,7 +50,6 @@ bool isHiddenFileOrDir(DirEntry entry)
 
 void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 {
-
 	auto dirs = getcwd.dirEntries(SpanMode.shallow)
 		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
 		.array
@@ -60,27 +66,27 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 
 		if(name.exists)
 		{
-			TocParser!() parser;
+			TocParser!AdditionalMethods parser;
 			parser.loadFile(name);
 
-			if(parser.as!size_t("Interface") != apiVersion)
+			if(parser.getInterface() != apiVersion)
 			{
-				immutable string title = parser.getValue("Title");
+				immutable string title = parser.getTitle();
 
 				if(title.length)
 				{
 					if(title.canFind("|"))
 					{
-						writeln(name.baseName.stripExtension, " => ", parser.getValue("Interface"));
+						writeln(name.baseName.stripExtension, " => ", parser.getInterface());
 					}
 					else
 					{
-						writeln(parser.getValue("Title"), " => ", parser.getValue("Interface"));
+						writeln(parser.getValue("Title"), " => ", parser.getInterface());
 					}
 				}
 				else
 				{
-					writeln(name.baseName.stripExtension, " => ", parser.getValue("Interface"));
+					writeln(name.baseName.stripExtension, " => ", parser.getInterface());
 				}
 				++numberOfOutdated;
 			}
@@ -101,10 +107,10 @@ size_t getCurrentInterfaceVersion()
 		.ifThrown!ErrnoException(temp)
 		.ifThrown!RequestException(temp);
 
-	TocParser!() toc;
+	TocParser!AdditionalMethods parser;
 
-	toc.loadString(content);
-	return toc.as!size_t("Interface", CURRENT_INTERFACE_VERSION);
+	parser.loadString(content);
+	return parser.getInterface(CURRENT_INTERFACE_VERSION);
 }
 
 void showVersion()
