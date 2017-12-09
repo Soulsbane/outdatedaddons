@@ -60,7 +60,7 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 
 		if(name.exists)
 		{
-			TocParser parser;
+			TocParser!() parser;
 			parser.loadFile(name);
 
 			if(parser.as!size_t("Interface") != apiVersion)
@@ -101,7 +101,7 @@ size_t getCurrentInterfaceVersion()
 		.ifThrown!ErrnoException(temp)
 		.ifThrown!RequestException(temp);
 
-	TocParser toc;
+	TocParser!() toc;
 
 	toc.loadString(content);
 	return toc.as!size_t("Interface", CURRENT_INTERFACE_VERSION);
