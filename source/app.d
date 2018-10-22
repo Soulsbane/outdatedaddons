@@ -75,6 +75,7 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 
 				if(title.length)
 				{
+					// INFO Some addons use | in there name to colorize it.
 					if(title.canFind("|"))
 					{
 						writeln(name.baseName.stripExtension, " => ", parser.getInterface());
@@ -84,10 +85,11 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 						writeln(parser.getValue("Title"), " => ", parser.getInterface());
 					}
 				}
-				else
+				else // INFO: Use the directory name for the name of the addon.
 				{
 					writeln(name.baseName.stripExtension, " => ", parser.getInterface());
 				}
+
 				++numberOfOutdated;
 			}
 		}
