@@ -58,7 +58,7 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
 	immutable size_t numberOfAddons = dirs.length;
 	size_t numberOfOutdated;
 
-	writeln(numberOfAddons, " addons found. Scanning toc files...");
+	writeln("Found ", numberOfAddons, " to check. Scanning addons...");
 
 	foreach(e; dirs)
 	{
