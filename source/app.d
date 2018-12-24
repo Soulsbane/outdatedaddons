@@ -48,6 +48,22 @@ bool isHiddenFileOrDir(DirEntry entry)
 	return false;
 }
 
+bool isSeverelyOutdated(size_t currentVersion)
+{
+	import std.conv : to;
+
+	immutable string versionStr = currentVersion.to!string;
+	immutable string currentVersionStr = CURRENT_INTERFACE_VERSION.to!string;
+
+	if(versionStr[0].to!size_t < currentVersionStr[0].to!size_t)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//TODO Create a formated string that is colorized by how out of date an addons is.
 void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const string author = string.init)
 {
 	auto dirs = getcwd.dirEntries(SpanMode.shallow)
@@ -69,6 +85,8 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 			TocParser!AdditionalMethods parser;
 			parser.loadFile(name);
 
+			immutable bool severe = isSeverelyOutdated(parser.getInterface());
+
 			if(parser.getInterface() != apiVersion)
 			{
 				immutable string title = parser.getTitle();
@@ -78,16 +96,16 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 					// INFO Some addons use | in there name to colorize it.
 					if(title.canFind("|"))
 					{
-						writeln(name.baseName.stripExtension, " => ", parser.getInterface());
+						writeln(name.baseName.stripExtension, " => ", parser.getInterface(), " Severly: ", severe);
 					}
 					else
 					{
-						writeln(parser.getValue("Title"), " => ", parser.getInterface());
+						writeln(parser.getValue("Title"), " => ", parser.getInterface(), " Severly: ", severe);
 					}
 				}
 				else // INFO: Use the directory name for the name of the addon.
 				{
-					writeln(name.baseName.stripExtension, " => ", parser.getInterface());
+					writeln(name.baseName.stripExtension, " => ", parser.getInterface(), " Severly: ", severe);
 				}
 
 				++numberOfOutdated;
