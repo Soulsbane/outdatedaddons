@@ -85,9 +85,10 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 			TocParser!AdditionalMethods parser;
 			parser.loadFile(name);
 
-			immutable bool severe = isSeverelyOutdated(parser.getInterface());
+			immutable size_t addonInterfaceVer = parser.getInterface();
+			immutable bool severe = isSeverelyOutdated(addonInterfaceVer);
 
-			if(parser.getInterface() != apiVersion)
+			if(addonInterfaceVer != apiVersion)
 			{
 				immutable string title = parser.getTitle();
 
@@ -96,16 +97,16 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 					// INFO Some addons use | in there name to colorize it.
 					if(title.canFind("|"))
 					{
-						writeln(name.baseName.stripExtension, " => ", parser.getInterface(), " Severly: ", severe);
+						writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severly: ", severe);
 					}
 					else
 					{
-						writeln(parser.getValue("Title"), " => ", parser.getInterface(), " Severly: ", severe);
+						writeln(parser.getValue("Title"), " => ", addonInterfaceVer, " Severly: ", severe);
 					}
 				}
 				else // INFO: Use the directory name for the name of the addon.
 				{
-					writeln(name.baseName.stripExtension, " => ", parser.getInterface(), " Severly: ", severe);
+					writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severly: ", severe);
 				}
 
 				++numberOfOutdated;
