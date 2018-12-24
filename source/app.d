@@ -48,7 +48,7 @@ bool isHiddenFileOrDir(DirEntry entry)
 	return false;
 }
 
-void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION)
+void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const string author = string.init)
 {
 	auto dirs = getcwd.dirEntries(SpanMode.shallow)
 		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
