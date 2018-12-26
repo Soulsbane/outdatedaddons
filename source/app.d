@@ -21,7 +21,7 @@ struct AdditionalMethods
 	size_t Interface; // Has to be capitalized since it is a keyword.
 }
 
-bool isHiddenFileOrDir(DirEntry entry)
+bool isHiddenFileOrDir(const DirEntry entry)
 {
 	auto dirParts = entry.name.pathSplitter;
 
@@ -48,7 +48,7 @@ bool isHiddenFileOrDir(DirEntry entry)
 	return false;
 }
 
-bool isSeverelyOutdated(size_t currentVersion)
+bool isSeverelyOutdated(const size_t currentVersion)
 {
 	import std.conv : to;
 
