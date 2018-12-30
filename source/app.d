@@ -48,7 +48,7 @@ bool isHiddenFileOrDir(const DirEntry entry)
 	return false;
 }
 
-bool isSeverelyOutdated(const size_t currentVersion)
+bool isAddonOutdated(const size_t currentVersion)
 {
 	import std.conv : to;
 
@@ -86,7 +86,7 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 			parser.loadFile(name);
 
 			immutable size_t addonInterfaceVer = parser.getInterface();
-			immutable bool severe = isSeverelyOutdated(addonInterfaceVer);
+			immutable bool severe = isAddonOutdated(addonInterfaceVer);
 
 			if(addonInterfaceVer != apiVersion)
 			{
