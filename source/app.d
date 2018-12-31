@@ -34,9 +34,9 @@ bool isHiddenFileOrDir(const DirEntry entry)
 				return true;
 			}
 		}
-		version (Windows)
+		version(Windows)
 		{
-			import core.sys.windows;
+			import core.sys.windows : getAttributes, FILE_ATTRIBUTE_HIDDEN;
 
 			if(getAttributes(dirPart) & FILE_ATTRIBUTE_HIDDEN)
 			{
