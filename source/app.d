@@ -21,6 +21,14 @@ struct AdditionalMethods
 	size_t Interface; // Has to be capitalized since it is a keyword.
 }
 
+// Used to determine how outdated an Addon is.
+enum InterfaceVersionTypes
+{
+	current, // Ex 80100
+	previous, // Ex 80000
+	anotherExpansion // Ex 60000
+}
+
 bool isHiddenFileOrDir(const DirEntry entry)
 {
 	auto dirParts = entry.name.pathSplitter;
