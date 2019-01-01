@@ -56,14 +56,14 @@ bool isHiddenFileOrDir(const DirEntry entry)
 	return false;
 }
 
-bool isAddonOutdated(const size_t currentVersion)
+bool isAddonOutdated(const size_t addonVersion)
 {
 	import std.conv : to;
 
-	immutable string versionStr = currentVersion.to!string;
+	immutable string addonVersionStr = addonVersion.to!string;
 	immutable string currentVersionStr = CURRENT_INTERFACE_VERSION.to!string;
 
-	if(versionStr[0].to!size_t < currentVersionStr[0].to!size_t)
+	if(addonVersionStr[0].to!size_t < currentVersionStr[0].to!size_t)
 	{
 		return true;
 	}
