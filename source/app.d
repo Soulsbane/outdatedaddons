@@ -25,8 +25,8 @@ struct AdditionalMethods
 enum InterfaceVersionTypes
 {
 	current, // Ex 80100
-	previous, // Ex 80000
-	anotherExpansion // Ex 60000
+	minor, // Ex 80000
+	major // Ex 60000
 }
 
 bool isHiddenFileOrDir(const DirEntry entry)
