@@ -12,7 +12,7 @@ import luaaddon.tocparser;
 import ctoptions.structoptions;
 import ctoptions.getoptmixin;
 
-enum CURRENT_INTERFACE_VERSION = 80_100;
+enum CURRENT_INTERFACE_VERSION = 80_300;
 
 // Used to add additional methods to TocParser.
 struct AdditionalMethods
@@ -105,16 +105,16 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 					// INFO Some addons use | in there name to colorize it.
 					if(title.canFind("|"))
 					{
-						writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severly: ", severe);
+						writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
 					}
 					else
 					{
-						writeln(parser.getValue("Title"), " => ", addonInterfaceVer, " Severly: ", severe);
+						writeln(parser.getValue("Title"), " => ", addonInterfaceVer, " Severely Outdated: ", severe);
 					}
 				}
 				else // INFO: Use the directory name for the name of the addon.
 				{
-					writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severly: ", severe);
+					writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
 				}
 
 				++numberOfOutdated;
