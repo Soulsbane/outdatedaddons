@@ -4,6 +4,7 @@ import std.file;
 import std.array;
 import std.path;
 import std.exception;
+import std.conv;
 import core.exception : RangeError;
 
 import requests;
@@ -58,12 +59,9 @@ bool isHiddenFileOrDir(const DirEntry entry)
 
 bool isAddonOutdated(const size_t addonVersion)
 {
-	import std.conv : to;
+	immutable size_t currentVersion = CURRENT_INTERFACE_VERSION;
 
-	immutable string addonVersionStr = addonVersion.to!string;
-	immutable string currentVersionStr = CURRENT_INTERFACE_VERSION.to!string;
-
-	if(addonVersionStr[0].to!size_t < currentVersionStr[0].to!size_t)
+	if(addonVersion < currentVersion)
 	{
 		return true;
 	}
