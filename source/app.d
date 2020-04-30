@@ -18,8 +18,8 @@ enum CURRENT_INTERFACE_VERSION = 80_300;
 // Used to add additional methods to TocParser.
 struct AdditionalMethods
 {
-	string Title;
-	size_t Interface; // Has to be capitalized since it is a keyword.
+	string title;
+	size_t interfaceVersion; // Has to be capitalized since it is a keyword.
 }
 
 // Used to determine how outdated an Addon is.
@@ -91,7 +91,7 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 			TocParser!AdditionalMethods parser;
 			parser.loadFile(name);
 
-			immutable size_t addonInterfaceVer = parser.getInterface();
+			immutable size_t addonInterfaceVer = parser.getInterfaceVersion();
 			immutable bool severe = isAddonOutdated(addonInterfaceVer);
 
 			if(addonInterfaceVer != apiVersion)
@@ -137,7 +137,7 @@ size_t getCurrentInterfaceVersion()
 	TocParser!AdditionalMethods parser;
 
 	parser.loadString(content);
-	return parser.getInterface(CURRENT_INTERFACE_VERSION);
+	return parser.getInterfaceVersion(CURRENT_INTERFACE_VERSION);
 }
 
 void showVersion()
