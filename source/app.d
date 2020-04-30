@@ -3,11 +3,8 @@ import std.algorithm;
 import std.file;
 import std.array;
 import std.path;
-import std.exception;
 import std.conv;
 import core.exception : RangeError;
-
-import requests;
 
 import luaaddon.tocparser;
 import ctoptions.structoptions;
@@ -123,23 +120,6 @@ void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const str
 	writeln("Found a total of ", numberOfOutdated, " outdated addons!");
 }
 
-size_t getCurrentInterfaceVersion()
-{
-	Buffer!ubyte temp;
-
-	immutable string apiUrl = "https://raw.githubusercontent.com/tomrus88/BlizzardInterfaceCode/master/Interface/FrameXML/FrameXML.toc";
-	immutable string content = cast(string)getContent(apiUrl)
-		.ifThrown!ConnectError(temp)
-		.ifThrown!TimeoutException(temp)
-		.ifThrown!ErrnoException(temp)
-		.ifThrown!RequestException(temp);
-
-	TocParser!AdditionalMethods parser;
-
-	parser.loadString(content);
-	return parser.getInterface(CURRENT_INTERFACE_VERSION);
-}
-
 void showVersion()
 {
 	writeln("Version 0.9");
@@ -165,11 +145,5 @@ void main(string[] arguments)
 	else
 	{
 		generateGetOptCode!Options(arguments, options);
-
-		if(options.hasUpdate())
-		{
-			immutable size_t apiVersion = getCurrentInterfaceVersion();
-			scanAddonDir(apiVersion);
-		}
 	}
 }
