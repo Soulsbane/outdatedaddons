@@ -10,6 +10,8 @@ import luaaddon.tocparser;
 import ctoptions.structoptions;
 import ctoptions.getoptmixin;
 
+import addonlistformatter;
+
 enum CURRENT_INTERFACE_VERSION = 80_300;
 
 // Used to add additional methods to TocParser.
