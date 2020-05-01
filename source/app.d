@@ -21,14 +21,6 @@ struct AdditionalMethods
 	size_t Interface; // Has to be capitalized since it is a keyword.
 }
 
-// Used to determine how outdated an Addon is.
-enum InterfaceVersionTypes
-{
-	current, // Ex 80100
-	minor, // Ex 80000
-	major // Ex 60000
-}
-
 bool isHiddenFileOrDir(const DirEntry entry)
 {
 	auto dirParts = entry.name.pathSplitter;
@@ -68,58 +60,50 @@ bool isAddonOutdated(const size_t addonVersion)
 	return false;
 }
 
-//TODO Create a formated string that is colorized by how out of date an addons is.
-void scanAddonDir(const size_t apiVersion = CURRENT_INTERFACE_VERSION, const string author = string.init)
+void processAddonDir(DirEntry e)
 {
-	auto dirs = getcwd.dirEntries(SpanMode.shallow)
-		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
-		.array
-		.sort!((a, b) => a.name < b.name);
+	immutable string name = buildNormalizedPath(e.name, e.name.baseName ~ ".toc");
 
-	immutable size_t numberOfAddons = dirs.length;
-	size_t numberOfOutdated;
-
-	writeln("Found ", numberOfAddons, " to check. Scanning addons...");
-
-	foreach(e; dirs)
+	if(name.exists)
 	{
-		immutable string name = buildNormalizedPath(e.name, e.name.baseName ~ ".toc");
+		TocParser!AdditionalMethods parser;
+		parser.loadFile(name);
 
-		if(name.exists)
+		immutable size_t addonInterfaceVer = parser.getInterface();
+		immutable bool severe = isAddonOutdated(addonInterfaceVer);
+
+		if(addonInterfaceVer != CURRENT_INTERFACE_VERSION)
 		{
-			TocParser!AdditionalMethods parser;
-			parser.loadFile(name);
+			immutable string title = parser.getTitle();
 
-			immutable size_t addonInterfaceVer = parser.getInterface();
-			immutable bool severe = isAddonOutdated(addonInterfaceVer);
-
-			if(addonInterfaceVer != apiVersion)
+			if(title.length)
 			{
-				immutable string title = parser.getTitle();
-
-				if(title.length)
-				{
-					// INFO Some addons use | in there name to colorize it.
-					if(title.canFind("|"))
-					{
-						writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
-					}
-					else
-					{
-						writeln(parser.getValue("Title"), " => ", addonInterfaceVer, " Severely Outdated: ", severe);
-					}
-				}
-				else // INFO: Use the directory name for the name of the addon.
+				// INFO Some addons use | in there name to colorize it.
+				if(title.canFind("|"))
 				{
 					writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
 				}
-
-				++numberOfOutdated;
+				else
+				{
+					writeln(parser.getTitle(), " => ", addonInterfaceVer, " Severely Outdated: ", severe);
+				}
+			}
+			else // INFO: Use the directory name for the name of the addon.
+			{
+				writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
 			}
 		}
 	}
+}
 
-	writeln("Found a total of ", numberOfOutdated, " outdated addons!");
+//TODO Create a formated string that is colorized by how out of date an addons is.
+void scanAddonDir()
+{
+	getcwd.dirEntries(SpanMode.shallow)
+		.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
+		.array
+		.sort!((a, b) => a.name < b.name)
+		.each!((entry) => processAddonDir(entry));
 }
 
 void showVersion()
