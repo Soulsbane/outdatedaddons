@@ -4,6 +4,7 @@ import std.file;
 import std.array;
 import std.path;
 import std.conv;
+import std.string;
 import core.exception : RangeError;
 
 import luaaddon.tocparser;
@@ -60,6 +61,25 @@ bool isAddonOutdated(const size_t addonVersion)
 	return false;
 }
 
+// INFO: Some addons name are colorized in the WoW addon window and so this silly fix is here.
+string getAddonTitle(string title, string dirName)
+{
+	if(title.length)
+	{
+		// INFO: Some addons use | in there name to colorize it.
+		if(title.canFind("|"))
+		{
+			return dirName;
+		}
+
+		return title;
+	}
+	else // INFO: Use the directory name for the name of the addon.
+	{
+		return dirName;
+	}
+}
+
 void processAddonDir(DirEntry e)
 {
 	immutable string name = buildNormalizedPath(e.name, e.name.baseName ~ ".toc");
@@ -74,29 +94,12 @@ void processAddonDir(DirEntry e)
 
 		if(addonInterfaceVer != CURRENT_INTERFACE_VERSION)
 		{
-			immutable string title = parser.getTitle();
-
-			if(title.length)
-			{
-				// INFO Some addons use | in there name to colorize it.
-				if(title.canFind("|"))
-				{
-					writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
-				}
-				else
-				{
-					writeln(parser.getTitle(), " => ", addonInterfaceVer, " Severely Outdated: ", severe);
-				}
-			}
-			else // INFO: Use the directory name for the name of the addon.
-			{
-				writeln(name.baseName.stripExtension, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
-			}
+			immutable string title = getAddonTitle(parser.getTitle(), e.name.baseName);
+			writeln(title, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
 		}
 	}
 }
 
-//TODO Create a formated string that is colorized by how out of date an addons is.
 void scanAddonDir()
 {
 	getcwd.dirEntries(SpanMode.shallow)
