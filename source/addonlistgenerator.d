@@ -9,10 +9,13 @@ import std.conv;
 import std.string;
 import core.exception : RangeError;
 
+import colored;
+
 import addonlistformatter;
 import luaaddon.tocparser;
 
 enum CURRENT_INTERFACE_VERSION = 80_300;
+enum MAX_VERSION_DIFFERANCE = 10_000;
 
 // Used to add additional methods to TocParser.
 struct AdditionalMethods
@@ -58,16 +61,16 @@ public:
 		formatter_ = new AddonListFormatter(3);
 	}
 
-	bool isAddonOutdated(const size_t addonVersion)
+	//bool isAddonOutdated(const size_t addonVersion)
+	string isAddonOutdated(const size_t addonVersion)
 	{
-		immutable size_t currentVersion = CURRENT_INTERFACE_VERSION;
-
-		if(addonVersion < currentVersion)
+		if((CURRENT_INTERFACE_VERSION - addonVersion) >= MAX_VERSION_DIFFERANCE)
 		{
-			return true;
+			immutable string yes = "YES".red.toString;
+			return yes;
 		}
 
-		return false;
+		return "No";
 	}
 
 	// INFO: Some addons name are colorized in the WoW addon window and so this silly fix is here.
@@ -97,12 +100,12 @@ public:
 			parser.loadFile(name);
 
 			immutable size_t addonInterfaceVer = parser.getInterface();
-			immutable bool severe = isAddonOutdated(addonInterfaceVer);
+			immutable string isSeverelyOutdated = isAddonOutdated(addonInterfaceVer);
 
 			if(addonInterfaceVer != CURRENT_INTERFACE_VERSION)
 			{
 				immutable string title = getAddonTitle(parser.getTitle(), e.name.baseName);
-				formatter_.addRow(title, addonInterfaceVer, severe);
+				formatter_.addRow(title, addonInterfaceVer, isSeverelyOutdated);
 			}
 		}
 	}

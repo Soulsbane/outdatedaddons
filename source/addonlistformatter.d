@@ -76,8 +76,8 @@ class AddonListFormatter
 		.parts(new CustomAsciiParts)
 		.borders(true)
 		.separators(true)
-		.to!string
-		.lightBlue;
+		.to!string;
+		//.lightBlue;
 
 		writeln(formattedTable);
 	}
