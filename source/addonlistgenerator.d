@@ -83,10 +83,8 @@ public:
 
 			return title;
 		}
-		else // INFO: Use the directory name for the name of the addon.
-		{
-			return dirName;
-		}
+
+		return dirName;
 	}
 
 	void processAddonDir(DirEntry e)
