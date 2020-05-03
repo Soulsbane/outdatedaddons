@@ -15,7 +15,7 @@ import addonlistformatter;
 import luaaddon.tocparser;
 
 enum CURRENT_INTERFACE_VERSION = 80_300;
-enum MAX_VERSION_DIFFERANCE = 10_000;
+enum MAX_VERSION_TOLERANCE = 10_000;
 
 // Used to add additional methods to TocParser.
 struct AdditionalMethods
@@ -63,7 +63,7 @@ public:
 
 	string isAddonOutdated(const size_t addonVersion)
 	{
-		if((CURRENT_INTERFACE_VERSION - addonVersion) >= MAX_VERSION_DIFFERANCE)
+		if((CURRENT_INTERFACE_VERSION - addonVersion) >= MAX_VERSION_TOLERANCE)
 		{
 			immutable string yes = "YES".red.toString;
 			return yes;
