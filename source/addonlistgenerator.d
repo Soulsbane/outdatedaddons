@@ -61,7 +61,6 @@ public:
 		formatter_ = new AddonListFormatter(3);
 	}
 
-	//bool isAddonOutdated(const size_t addonVersion)
 	string isAddonOutdated(const size_t addonVersion)
 	{
 		if((CURRENT_INTERFACE_VERSION - addonVersion) >= MAX_VERSION_DIFFERANCE)
