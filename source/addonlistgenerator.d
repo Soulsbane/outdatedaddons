@@ -55,8 +55,7 @@ private:
 public:
 	this()
 	{
-		auto formatter_ = new AddonListFormatter(3);
-		formatter_.writeHeader("Name", "Version", "Outdated");
+		formatter_ = new AddonListFormatter(3);
 	}
 
 	bool isAddonOutdated(const size_t addonVersion)
@@ -105,18 +104,22 @@ public:
 			if(addonInterfaceVer != CURRENT_INTERFACE_VERSION)
 			{
 				immutable string title = getAddonTitle(parser.getTitle(), e.name.baseName);
-				writeln(title, " => ", addonInterfaceVer, " Severely Outdated: ", severe);
+				formatter_.addRow(title, addonInterfaceVer, severe);
 			}
 		}
 	}
 
 	void scanAddonDir()
 	{
+		formatter_.writeHeader("Name", "Version", "Outdated");
+
 		getcwd.dirEntries(SpanMode.shallow)
 			.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
 			.array
 			.sort!((a, b) => a.name < b.name)
 			.each!((entry) => processAddonDir(entry));
+
+		formatter_.render();
 	}
 }
 
