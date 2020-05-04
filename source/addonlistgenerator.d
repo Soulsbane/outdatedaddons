@@ -72,7 +72,7 @@ public:
 		return "No";
 	}
 
-	// INFO: Some addons name are colorized in the WoW addon window and so this silly fix is here.
+	// INFO: The name of an addon can be colorized sometimes. So use the directory name instead.
 	string getAddonTitle(string title, string dirName)
 	{
 		if(title.length)
