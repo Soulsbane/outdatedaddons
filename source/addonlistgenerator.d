@@ -14,9 +14,7 @@ import colored;
 import addonlistformatter;
 import luaaddon.tocparser;
 
-enum CURRENT_INTERFACE_VERSION = 80_300;
-enum MAX_VERSION_TOLERANCE = 10_000;
-
+import constants;
 // Used to add additional methods to TocParser.
 struct AdditionalMethods
 {

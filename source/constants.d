@@ -1,0 +1,4 @@
+module constants;
+
+enum CURRENT_INTERFACE_VERSION = 80_300;
+enum MAX_VERSION_TOLERANCE = 10_000;
