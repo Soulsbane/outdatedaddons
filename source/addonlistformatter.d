@@ -37,7 +37,7 @@ class CustomAsciiTable : AsciiTable
 
 class AddonListFormatter
 {
-	CustomAsciiTable table_;
+	private CustomAsciiTable table_;
 
 	this(size_t numColumns)
 	{
