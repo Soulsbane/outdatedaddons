@@ -56,7 +56,7 @@ class AddonListFormatter
 
 	void addBlankRow()
 	{
-		addRow(" "," "," "," "," "," ");
+		addRow(" "," "," ");
 	}
 
 	void addRow(T...)(T args)
