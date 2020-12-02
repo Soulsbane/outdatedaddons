@@ -97,19 +97,23 @@ public:
 			parser.loadFile(name);
 
 			immutable size_t addonInterfaceVer = parser.getInterface();
-			immutable string isSeverelyOutdated = isAddonOutdated(addonInterfaceVer);
 
 			if(addonInterfaceVer != CURRENT_INTERFACE_VERSION)
 			{
 				immutable string title = getAddonTitle(parser.getTitle(), e.name.baseName);
-				formatter_.addRow(title, addonInterfaceVer, isSeverelyOutdated);
+
+				if(addonInterfaceVer < CURRENT_INTERFACE_VERSION)
+				{
+					immutable string isSeverelyOutdated = isAddonOutdated(addonInterfaceVer);
+					formatter_.addRow(title, addonInterfaceVer, isSeverelyOutdated);
+				}
 			}
 		}
 	}
 
 	void scanAddonDir()
 	{
-		formatter_.writeHeader("Name", "Version", "Outdated");
+		formatter_.writeHeader("Name", "Version", "Wrong Expansion");
 
 		getcwd.dirEntries(SpanMode.shallow)
 			.filter!(a => (!isHiddenFileOrDir(a) && a.isDir))
